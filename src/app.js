@@ -1,34 +1,27 @@
-import express from 'express';
-import { productsManager } from './ProductsManager.js';
+import express from "express";
+import { cartsRouter } from "./routes/carts.router.js";
+import { productsRouter } from "./routes/products.router.js";
+
 const app = express();
+const PORT = 8080;
 
-app.get("/api/products", async (req, res) => {
-    try {
-        const products = await productsManager.getProducts(req.query)
-        if (!products.length) {
-            return res.status(200).json({ message: "No hay productos" })
-        }
-        res.status(200).json({ message: "Productos encontrados", products })
-    } catch (error) {
-        res.status(500).json({ message: error.message })
-    }
-})
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-app.get("/api/products/:idProduct", async (req, res) => {
-    const { idProduct } = req.params
-    try {
-        const product = await productsManager.getProductById(+idProduct)
-        if (!product) {
-            return res.status(400).json({ message: "Producto no fue encontrado por su id" })
-        }
-        res.status(200).json({ message: "Producto encontrado", product })
-    } catch (error) {
-        res.status(500).json({ message: error.message })
-    }
+app.use(express.static("public"));
 
-})
+app.listen(PORT, () => {
+  console.log(`Servidor escuchando en el puerto ${PORT}`);
+});
 
-app.listen(8080, () => {
-    console.log("Escuchando al puerto 8080")
-})
+//TODOS MIS ENDPOINTS
+app.use("/api/products", productsRouter);
+app.use("/api/carts", cartsRouter);
+
+//OTROS ENDPOINTS
+app.get("*", (req, res) => {
+  return res
+    .status(404)
+    .json({ status: "error", msg: "No se encuentra esa ruta", data: {} });
+});
 
