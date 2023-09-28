@@ -1,27 +1,49 @@
 import express from "express";
-import { cartsRouter } from "./routes/carts.router.js";
-import { productsRouter } from "./routes/products.router.js";
+import handlebars from 'express-handlebars';
+import viewsRouter from './routes/views.routes.js';
+import { Server } from 'socket.io';
+import __dirname from './utils.js';
+import ProductManager from "./managers/productManager.js";
+
 
 const app = express();
-const PORT = 8080;
+const httpServer = app.listen(8080, () => console.log('Server up in port 8080'))
+
+const io = new Server(httpServer)
+
+
+// handlebars
+app.engine('hbs', handlebars.engine({
+    extname: 'hbs',
+    defaultLayout: 'main'
+}))
 
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: true }))
+app.set('view engine', 'hbs')
+app.set('views', `${__dirname}/views`)
+app.use(express.static(`${__dirname}/public`))
 
-app.use(express.static("public"));
+// Routes
+app.use('/', viewsRouter)
 
-app.listen(PORT, () => {
-  console.log(`Servidor escuchando en el puerto ${PORT}`);
-});
+const products = new ProductManager(`${__dirname}/productos.json`)
 
-//TODOS MIS ENDPOINTS
-app.use("/api/products", productsRouter);
-app.use("/api/carts", cartsRouter);
+// Sockets
+io.on('connection', (socket) => {
+    console.log('se conecto un cliente');
 
-//OTROS ENDPOINTS
-app.get("*", (req, res) => {
-  return res
-    .status(404)
-    .json({ status: "error", msg: "No se encuentra esa ruta", data: {} });
-});
+    io.sockets.emit('products', products.getProducts())
 
+    socket.on('new_prod', (data) => {
+        products.addProduct(data)
+        
+        io.sockets.emit('products', products.getProducts())
+    })
+
+    socket.on('delete_prod', (data) => {
+        products.deleteProduct(data.pid)
+
+        io.sockets.emit('products', products.getProducts())
+    })
+})
