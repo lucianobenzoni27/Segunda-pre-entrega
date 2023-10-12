@@ -4,8 +4,9 @@
         "title": "Producto 1",
         "description": "Descripción del producto 1",
         "price": 1.99,
-        "thumbnail": "imagen1.jpg",
+        "thumbnail": [],
         "code": "P1",
+        "status": true,
         "category": "Categoría1",
         "stock": 10
     },
@@ -14,8 +15,9 @@
         "title": "Producto 2",
         "description": "Descripción del producto 2",
         "price": 2.99,
-        "thumbnail": "imagen2.jpg",
+        "thumbnail": [],
         "code": "P2",
+        "status": true,
         "category": "Categoría2",
         "stock": 20
     },
@@ -24,8 +26,9 @@
         "title": "Producto 3",
         "description": "Descripción del producto 3",
         "price": 3.99,
-        "thumbnail": "imagen3.jpg",
+        "thumbnail": [],
         "code": "P125",
+        "status": true,
         "category": "Categoría3",
         "stock": 30
     },
@@ -34,8 +37,9 @@
         "title": "Producto 4",
         "description": "Descripción del producto 4",
         "price": 4.99,
-        "thumbnail": "imagen4.jpg",
+        "thumbnail": [],
         "code": "P4",
+        "status": true,
         "category": "Categoría4",
         "stock": 40
     },
@@ -44,8 +48,9 @@
         "title": "Producto 5",
         "description": "Descripción del producto 5",
         "price": 5.99,
-        "thumbnail": "imagen5.jpg",
+        "thumbnail": [],
         "code": "P5",
+        "status": true,
         "category": "Categoría5",
         "stock": 50
     }
