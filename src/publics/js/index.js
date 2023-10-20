@@ -21,11 +21,11 @@ document.getElementById('createBtn').addEventListener('click', () => {
     .then(result => {
         if (result.status === 'error') throw new Error(result.error)
     }) // si el resultado es un error, lanza una excepción
-    .then(() => fetch('/api/products')) // si no hubo error, hace un fetch para obtener la lista de productos
+    .then(() => fetch('/api/products?limit=10000')) // si no hubo error, hace un fetch para obtener la lista de productos
     .then(result => result.json()) // parsea el resultado a JSON
     .then(result => {
         if (result.status === 'error') throw new Error(result.error)
-        else socket.emit('productList', result.products) // si no hubo error, emite el evento productList con la lista de productos
+        else socket.emit('productList', result.payload) // si no hubo error, emite el evento productList con la lista de productos
         alert('Producto creado con éxito!')
         document.getElementById('title').value = '' // limpia los campos del formulario
         document.getElementById('description').value = ''
@@ -49,11 +49,11 @@ deleteProduct = (id) => {
           throw new Error('Error al eliminar el producto');
         }
       })
-      .then(() => fetch('/api/products'))
+      .then(() => fetch('/api/products?limit=10000'))
       .then((result) => result.json())
       .then((result) => {
         if (result.status === 'error') throw new Error(result.error);
-        else socket.emit('productList', result.products);
+        else socket.emit('productList', result.payload);
       })
       .catch((error) => alert(`Ocurrió un error: ${error}`));
   };
